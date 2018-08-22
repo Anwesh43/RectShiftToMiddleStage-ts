@@ -1,7 +1,8 @@
 const w : number = window.innerWidth, h : number = window.innerHeight
 const nodes : number = 5
+const color : string = '#43A047'
 const drawRSTMNode = (context, i, scale) => {
-    context.fillStyle = '#43A047'
+    context.fillStyle = color
     const gap : number = h / nodes
     const size : number = gap / 3
     const index : number = i % 2
@@ -116,6 +117,9 @@ class RSTMNode {
 
     draw(context : CanvasRenderingContext2D) {
         drawRSTMNode(context, this.i, this.state.scale)
+        if (this.prev) {
+            this.prev.draw(context)
+        }
     }
 
     update(cb : Function) {
@@ -145,6 +149,13 @@ class LinkedRSTM {
 
     draw(context : CanvasRenderingContext2D) {
         this.curr.draw(context)
+        context.lineCap = 'round'
+        context.lineWidth = Math.min(w, h) / 60
+        context.strokeStyle = color
+        context.beginPath()
+        context.moveTo(w / 2, 0.05 * h)
+        context.lineTo(w / 2, 0.95 * h)
+        context.stroke()
     }
 
     update(cb : Function) {
