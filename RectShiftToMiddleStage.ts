@@ -14,7 +14,8 @@ const drawRSTMNode = (context, i, scale) => {
 class RectShiftToMiddleStage {
     canvas : HTMLCanvasElement = document.createElement('canvas')
     context : CanvasRenderingContext2D
-
+    rstm : LinkedRSTM = new LinkedRSTM()
+    animator : Animator = new Animator()
     constructor() {
         this.initCanvas()
         this.render()
@@ -31,12 +32,27 @@ class RectShiftToMiddleStage {
     render() {
         this.context.fillStyle = '#212121'
         this.context.fillRect(0, 0, w, h)
+        if (this.rstm) {
+            this.rstm.draw(this.context)
+        }
     }
 
     handleTap() {
         this.canvas.onmousedown = () => {
-
+            this.rstm.startUpdating(() => {
+                this.animator.start(() => {
+                    this.render()
+                    this.rstm.update(() => {
+                        this.animator.stop()
+                        this.render()
+                    })
+                })
+            })
         }
+    }
+
+    static init() {
+        const stage : RectShiftToMiddleStage = new RectShiftToMiddleStage()
     }
 }
 
