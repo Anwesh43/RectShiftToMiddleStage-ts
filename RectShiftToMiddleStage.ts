@@ -1,5 +1,16 @@
 const w : number = window.innerWidth, h : number = window.innerHeight
 const nodes : number = 5
+const drawRSTMNode = (context, i, scale) => {
+    context.fillStyle = '#43A047'
+    const gap : number = h / nodes
+    const size : number = gap / 3
+    const index : number = i % 2
+    context.save()
+    context.translate(w / 2, gap/2 + gap * i)
+    context.scale(1 - 2 * index, 1)
+    context.fillRect(w/2 * (1 - scale) - size/2, -size/2, size, size)
+    context.restore()
+}
 class RectShiftToMiddleStage {
     canvas : HTMLCanvasElement = document.createElement('canvas')
     context : CanvasRenderingContext2D
