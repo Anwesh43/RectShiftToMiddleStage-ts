@@ -2,14 +2,17 @@ const w : number = window.innerWidth, h : number = window.innerHeight
 const nodes : number = 5
 const color : string = '#43A047'
 const drawRSTMNode = (context, i, scale) => {
-    context.fillStyle = color
     const gap : number = h / nodes
     const size : number = gap / 3
     const index : number = i % 2
     context.save()
     context.translate(w / 2, gap/2 + gap * i)
     context.scale(1 - 2 * index, 1)
-    context.fillRect(w/2 * (1 - scale) - size/2, -size/2, size, size)
+    context.fillRect((w/2 + size/2) * (1 - scale) - size/2, -size/2, size, size)
+    context.beginPath()
+    context.moveTo(0,  -gap/2)
+    context.lineTo(0, -gap/2 + gap * scale)
+    context.stroke()
     context.restore()
 }
 class RectShiftToMiddleStage {
@@ -148,14 +151,11 @@ class LinkedRSTM {
     dir : number = 1
 
     draw(context : CanvasRenderingContext2D) {
-        this.curr.draw(context)
         context.lineCap = 'round'
         context.lineWidth = Math.min(w, h) / 60
         context.strokeStyle = color
-        context.beginPath()
-        context.moveTo(w / 2, 0.05 * h)
-        context.lineTo(w / 2, 0.95 * h)
-        context.stroke()
+        context.fillStyle = color
+        this.curr.draw(context)
     }
 
     update(cb : Function) {
